@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="None">
+  
+  
+  <link rel="shortcut icon" href="img/favicon.ico">
+  <title>GuideLua</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Home";
+    var mkdocs_page_input_path = "index.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="js/jquery-2.1.1.min.js" defer></script>
+  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href="." class="icon icon-home"> GuideLua</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href=".">Home</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#guidelines-and-style">Guidelines and style</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#1-formatting">1. Formatting</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#11-code-encoding">1.1. Code encoding</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#12-line-break-type">1.2. Line break type</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#13-indentation">1.3. Indentation</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#14-usage-of-the-tab-character">1.4. Usage of the TAB character</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#15-trailing-spaces">1.5. Trailing spaces</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#16-line-length">1.6. Line length</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-naming-conventions">2. Naming conventions</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#21-naming-of-variables-functions-and-arguments">2.1. Naming of variables, functions, and arguments</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#22-libraries-naming">2.2. Libraries naming</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#23-unneeded-variables">2.3. Unneeded variables</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#24-hungarian-notation">2.4. Hungarian Notation</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#25-bad-characters">2.5. Bad characters</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-calling-conventions">3. Calling conventions</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#31-functions-calls-if-self-is-not-used-in-the-function">3.1. Functions calls if self is not used in the function</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#32-functions-calls-if-self-is-used-in-the-function">3.2. Functions calls if self is used in the function</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#4-layout">4. Layout</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#41-operators">4.1. Operators</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#42-spaces-next-to-brackets">4.2. Spaces next to brackets</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#43-space-alignment-of-items-using-spaces">4.3. Space alignment of items using spaces</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#44-empty-lines-between-functions-bodies">4.4. Empty lines between functions bodies</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#45-maximum-of-successive-empty-lines-permitted">4.5. Maximum of successive empty lines permitted</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#5-comments">5. Comments</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#51-comments-language">5.1 Comments language</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#52-inline-single-line-comments">5.2. Inline single-line comments</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#53-space-between-the-comment-starting-mark-and-the-text">5.3. Space between the comment starting mark and the text</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#54-luadoc-docstrings">5.4. Luadoc Docstrings</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#55-commented-code">5.5. Commented code</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#6-keywords-in-comments">6. Keywords in comments</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#61-todo">6.1. todo</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#62-bug">6.2. bug</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#63-note">6.3. note</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#7-scopes">7. Scopes</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#71-preferred-scope">7.1. Preferred scope</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#72-use-of-modules-instead-of-the-global-scope">7.2. Use of modules instead of the global scope</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#73-creation-of-local-aliases">7.3. Creation of local aliases</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#8-strings">8. Strings</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#81-usage-of-double-quoted-strings">8.1. Usage of double-quoted strings</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#9-functions">9. Functions</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#91-functions-size">9.1. Functions size</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#92-number-of-arguments-per-function">9.2. Number of arguments per function</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#93-one-line-functions">9.3. One-line functions</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#94-functions-return">9.4. Functions return</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#95-indentation-of-functions-arguments">9.5. Indentation of functions' arguments</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#10-tables-style">10. Tables style</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#101-tables-assignment-when-broken-in-multiple-lines">10.1. Tables assignment when broken in multiple lines</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#102-keys-alignments-when-table-in-multiple-lines">10.2. Keys alignments when table in multiple lines</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#103-usage-of-commas">10.3. Usage of commas</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#104-dictionary-constructors">10.4. Dictionary constructors</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#11-other-style-rules">11. Other style rules</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#111-checking-if-a-variable-is-void">11.1. Checking if a variable is void</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#112-ternary-operators-like-assignments">11.2. Ternary operators-like assignments</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#113-avoid-more-than-3-levels-of-nesting">11.3. Avoid more than 3 levels of nesting</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="about/">About the Application</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href=".">GuideLua</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Home</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="guidelines-documentation">Guidelines Documentation</h1>
+<p>Documentation of the Guidelines and Style followed on the coding of the Industry 4.0 project of Boehringer Ingelheim, and, also, of the application to check that the code is following the guidelines.
+For more information about the application visit the <a href="http://127.0.0.1:8000/about/">About</a> page.</p>
+<h2 id="guidelines-and-style">Guidelines and style</h2>
+<p>These code guidelines and style are are a combination of the inmation's ESI Coding Standards, the S+S' style, the Luacheck lintern, and various coding standards of the Lua language. The compliance of these rules is checked through the GuideLua application.</p>
+<h3 id="1-formatting">1. Formatting</h3>
+<h4 id="11-code-encoding">1.1. Code encoding</h4>
+<p>The project must use the UTF-8 encoding.</p>
+<h4 id="12-line-break-type">1.2. Line break type</h4>
+<p>The project must use the CRLF ( carriage return <code>\r</code> + line feed <code>\n</code>) line break type because the operating system will be Windows.</p>
+<h4 id="13-indentation">1.3. Indentation</h4>
+<p>The default tab size must be of 4 spaces.</p>
+<pre><code>local function foo( )
+    local j = 0
+end
+</code></pre>
+<p>&nbsp;</p>
+<h4 id="14-usage-of-the-tab-character">1.4. Usage of the TAB character</h4>
+<p>the <code>\t</code> character should not be used, instead, to indicate an indentation (tab size), use 4 spaces.</p>
+<h4 id="15-trailing-spaces">1.5. Trailing spaces</h4>
+<p>Avoid the usage of trailing spaces.</p>
+<h4 id="16-line-length">1.6. Line length</h4>
+<p>The maximum code line length permitted is of 120 characters. The longer instructions can be broken like this:</p>
+<pre><code>local function()
+</code></pre>
+<p>likewise, for larger strings use multi-line strings:</p>
+<pre><code>local longString = [[This is a string that
+even though you change of line
+is always recognized as the same string
+mostly used for SQL queries
+]]
+</code></pre>
+<h3 id="2-naming-conventions">2. Naming conventions</h3>
+<h4 id="21-naming-of-variables-functions-and-arguments">2.1. Naming of variables, functions, and arguments</h4>
+<p>The chosen notation is Camel Case with some variations detailed below -</p>
+<table>
+<thead>
+<tr>
+<th align="center">Index number</th>
+<th align="center">Element type</th>
+<th align="center">Scope</th>
+<th align="center">Notation</th>
+<th align="center">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">2.1.1.</td>
+<td align="center">Variable</td>
+<td align="center">Local</td>
+<td align="center">Lower Camel Case</td>
+<td align="center"><code>decInt</code></td>
+</tr>
+<tr>
+<td align="center">2.1.2.</td>
+<td align="center">Variable</td>
+<td align="center">Global</td>
+<td align="center">Upper Camel Case</td>
+<td align="center"><code>GitVersion</code></td>
+</tr>
+<tr>
+<td align="center">2.1.3.</td>
+<td align="center">Function</td>
+<td align="center">Local</td>
+<td align="center">Underscore followed by Lower Camel Case</td>
+<td align="center"><code>_deleteOne</code></td>
+</tr>
+<tr>
+<td align="center">2.1.4.</td>
+<td align="center">Function</td>
+<td align="center">Global</td>
+<td align="center">Upper Camel Case</td>
+<td align="center"><code>GetSum()</code></td>
+</tr>
+<tr>
+<td align="center">2.1.5.</td>
+<td align="center">Arguments</td>
+<td align="center">n/a</td>
+<td align="center">Lower Camel Case</td>
+<td align="center"><code>paramExample</code></td>
+</tr>
+<tr>
+<td align="center">2.1.6.</td>
+<td align="center">Library</td>
+<td align="center">n/a</td>
+<td align="center">According to the namespace in the system, where every single namespace in the Upper Camel Case is</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">separated by dots</td>
+<td align="center">SuS.Mailer</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<h4 id="22-libraries-naming">2.2. Libraries naming</h4>
+<p>The libraries should follow the scheme of <code>&lt;Environment&gt;.[&lt;System&gt;][.&lt;Module&gt;]*</code>, so, in the case of Boehringer Ingelheim this scheme by default should be <code>BI.&lt;Use Case or scope&gt;.&lt;Functionality&gt;</code></p>
+<pre><code>-- example
+BI.SAP.IdocReceiver
+</code></pre>
+<h4 id="23-unneeded-variables">2.3. Unneeded variables</h4>
+<p>The unneeded variables are notated using <code>_</code>.</p>
+<pre><code>for _,v in ipairs(t) do
+print(v)
+end
+</code></pre>
+<h4 id="24-hungarian-notation">2.4. Hungarian Notation</h4>
+<p>Don't use Hungarian notation. Don't add information about the type of data the variables carry, only use its name to describe its purpose.</p>
+<pre><code>-- DON'T
+local bIsBoolean = false
+
+-- DO
+local isBoolean = true
+</code></pre>
+<h4 id="25-bad-characters">2.5. Bad characters</h4>
+<p>Check if the code has some characters outside [0,127] in the ASCII table</p>
+<h3 id="3-calling-conventions">3. Calling conventions</h3>
+<p>All functions have to be called with the colon notation</p>
+<pre><code>--good calling notation
+--name of the library : FunctionName
+lib:Function()
+</code></pre>
+<p>If the function is to be exposed by the library, its name has to be capitalized, if it is an internal (helper) function, it must be lowercase with a trailing underscore.</p>
+<p>In cases where the intrinsic <code>self</code> parameter is not used, we need to do a classic dot-based declaration in order to not raise linter problems.</p>
+<pre><code>-- this would not please the linter, because the invisible self parameter is not used in the function body
+function lib:_makesqldate(posix)
+    return inmation.gettime(posix):sub(1,19)
+end
+
+-- this is the 'work-around' to please the linter, using the underscore (`_`) symbol
+function lib._makesqldate(_,posix)
+    return inmation.gettime(posix):sub(1,19)
+end
+</code></pre>
+<h4 id="31-functions-calls-if-self-is-not-used-in-the-function">3.1. Functions calls if <code>self</code> is not used in the function</h4>
+<pre><code>-- if self is NOT USED in the function
+function lib.selfNotUsed(_,arg1)
+    return "function received arg : " .. arg1
+end
+</code></pre>
+<h4 id="32-functions-calls-if-self-is-used-in-the-function">3.2. Functions calls if <code>self</code> is used in the function</h4>
+<pre><code>-- if self is USED in the function 
+function lib:selfUsed(arg1)
+    return "function called from " .. inmation.getselfpath() .. " received arg = " ..  arg1
+end
+</code></pre>
+<h3 id="4-layout">4. Layout</h3>
+<h4 id="41-operators">4.1. Operators</h4>
+<p>Use spaces around operators</p>
+<pre><code>    -- DON'T
+    local var1 = 3+2
+    if (var1==3)
+    then
+        --empty
+    end
+
+    -- DO
+    local var2 = 3 + 2
+    if (var2 == 3)
+    then
+        --empty
+    end
+</code></pre>
+<h4 id="42-spaces-next-to-brackets">4.2. Spaces next to brackets</h4>
+<p>No spaces are permitted after the <code>([</code> characters and before the <code>)]</code> characters.</p>
+<pre><code>    -- DON'T
+    if ( var1==3 )
+    then
+        --empty
+    end
+
+    -- DO
+    if (var2 == 3)
+    then
+        --empty
+    end
+</code></pre>
+<h4 id="43-space-alignment-of-items-using-spaces">4.3. Space alignment of items using spaces</h4>
+<p>Align variable assignments, function arguments and other code items that repeat structure.</p>
+<pre><code>-- DON'T
+local var1 = "Hi"
+local varNewLarge = "Hi large"
+
+-- DO
+local var1        = "Hi"
+local varNewLarge = "Hi large"
+</code></pre>
+<h4 id="44-empty-lines-between-functions-bodies">4.4. Empty lines between functions bodies</h4>
+<p>Leave an empty line between the <code>end</code> line of a function and the beggining of the next function.</p>
+<pre><code>-- DON'T
+local function one()
+    -- body
+end
+local function two()
+    -- body
+end
+
+-- DO
+local function one()
+    -- body
+end
+
+local function two()
+    -- body
+end
+</code></pre>
+<h4 id="45-maximum-of-successive-empty-lines-permitted">4.5. Maximum of successive empty lines permitted</h4>
+<p>The maximum number of successive empty lines permitted is of 2.</p>
+<h3 id="5-comments">5. Comments</h3>
+<p>Try to avoid the usage of comments. Only write comments that are necessary to the understanding of the code, i.e., when a certain program logic is not completely obvious.</p>
+<h4 id="51-comments-language">5.1 Comments language</h4>
+<p>All comment shall be written in the English language.</p>
+<h4 id="52-inline-single-line-comments">5.2. Inline single-line comments</h4>
+<p>If it is necessary to comment something, use single line comments using the characters <code>--</code> and, afterwards, the comment.</p>
+<pre><code>print("It ends!") -- this print serves to know when something has finished
+</code></pre>
+<h4 id="53-space-between-the-comment-starting-mark-and-the-text">5.3. Space between the comment starting mark and the text</h4>
+<p>Separate the comment mark and the comment itself with a single space</p>
+<pre><code>--DON'T
+-- DO
+</code></pre>
+<h4 id="54-luadoc-docstrings">5.4. Luadoc Docstrings</h4>
+<p>Use Luadoc Docstring for formal comment documentation.
+Use @param and @return if existing to document functions parameters and returning values, their purpose and specifications.</p>
+<pre><code>-- @param p1 first parameter
+-- @return c string value
+local function (p1)
+end
+</code></pre>
+<h4 id="55-commented-code">5.5. Commented code</h4>
+<p>Delete all the commented code that could exist on the files. Use the repository history (versions) as a wiki to find all the not-being-used code.</p>
+<h3 id="6-keywords-in-comments">6. Keywords in comments</h3>
+<p>Use the <code>todo</code>, <code>bug</code> and <code>note</code> tags.
+It is also possible to, if wanted, add the name or alias of the person responsible of this annotated code between parentheses.</p>
+<pre><code>-- TODO: Finish function development (Mariana)
+</code></pre>
+<h4 id="61-todo">6.1. <code>todo</code></h4>
+<p>Use this tag to indicate that there is a required improvement which the author of the comment is aware of, but could not be implemented yet.</p>
+<h4 id="62-bug">6.2. <code>bug</code></h4>
+<p>Use this tag to indicate that there is a bug which needs to be fixed.</p>
+<h4 id="63-note">6.3. <code>note</code></h4>
+<p>Use this keyword to denote an important statement about the code found below</p>
+<h3 id="7-scopes">7. Scopes</h3>
+<h4 id="71-preferred-scope">7.1. Preferred scope</h4>
+<p>The preferred scope to use is local</p>
+<h4 id="72-use-of-modules-instead-of-the-global-scope">7.2. Use of modules instead of the global scope</h4>
+<p>In most cases, it is better to use modules instead of storing very different data in the global scope.</p>
+<h4 id="73-creation-of-local-aliases">7.3. Creation of local aliases</h4>
+<p>It is preferred to create local aliases when there is a <code>require</code> of a module.</p>
+<h3 id="8-strings">8. Strings</h3>
+<h4 id="81-usage-of-double-quoted-strings">8.1. Usage of double-quoted strings</h4>
+<p>It is preferred to use double-quoted strings (<code>"hello"</code>) instead of the single-quoted strings (<code>'hello'</code>). Otherwise, for longer strings (longer than 100 characters), use multi-line strings (<code>local string = [[multiline string
+continues]]</code>).</p>
+<h3 id="9-functions">9. Functions</h3>
+<h4 id="91-functions-size">9.1. Functions size</h4>
+<p>The functions have to be to the point, small and short. The maximum of lines a function can have is 20. To achieve this number the function can be separated into smaller sub-functions.</p>
+<h4 id="92-number-of-arguments-per-function">9.2. Number of arguments per function</h4>
+<p>The number of arguments per function should be of 4 or less parameters.</p>
+<h4 id="93-one-line-functions">9.3. One-line functions</h4>
+<p>The one-line functions should be avoided.</p>
+<pre><code>-- DON'T
+local funcion one() local x = false end
+
+-- DO
+local function one()
+    local x = false
+end
+</code></pre>
+<h4 id="94-functions-return">9.4. Functions return</h4>
+<p>Avoid having different place of return for functions. If needed, an early return can be used.</p>
+<pre><code>-- DON'T
+local function f1(p1)
+    if p1 == 1 then
+        -- body 1
+        return 8
+    elseif p1 == 2 then
+        -- body 2
+        return 4
+    else
+        -- other body
+        return 2
+    end
+end
+
+-- DO
+local function f1(p1)
+    if not p1 then return 8 end
+    -- body 
+    return 2
+end
+</code></pre>
+<h4 id="95-indentation-of-functions-arguments">9.5. Indentation of functions' arguments</h4>
+<p>When calling a function, if ever argument is defined in a different line each, then these arguments should be aligned based on the position of the first argument.</p>
+<pre><code>lib:funct(par1,
+        par2,
+        par3)
+</code></pre>
+<h3 id="10-tables-style">10. Tables style</h3>
+<h4 id="101-tables-assignment-when-broken-in-multiple-lines">10.1. Tables assignment when broken in multiple lines</h4>
+<p>When the table has a lot of assignments, the table is broken into multiple lines.</p>
+<h4 id="102-keys-alignments-when-table-in-multiple-lines">10.2. Keys alignments when table in multiple lines</h4>
+<p>Align the table keys when the table is broken into multiple lines.</p>
+<h4 id="103-usage-of-commas">10.3. Usage of commas</h4>
+<p>Use commas as the principal separator when assigning values to the keys of a table.
+Prefer to use a comma after the last item is defined.</p>
+<pre><code>-- bad
+table = {key1=val1, key2=val2, key3=val3, key4=val4}
+
+-- good
+table = {
+key1 = val1,
+key2 = val2,
+key3 = val3,
+key4 = val4
+}
+</code></pre>
+<h4 id="104-dictionary-constructors">10.4. Dictionary constructors</h4>
+<p>Prefer using the simpler version of tables constructors and its keys and values definition </p>
+<pre><code>table = {
+key1 = val1,
+key2 = val2,
+}
+</code></pre>
+<p>than using another longer and overdone version such as </p>
+<pre><code>table = {
+    ["key1"] = val1,
+    ["key2"] = val2
+}
+</code></pre>
+<h3 id="11-other-style-rules">11. Other style rules</h3>
+<h4 id="111-checking-if-a-variable-is-void">11.1. Checking if a variable is void</h4>
+<p>When checking if a variable is void (nil, without content), it is preferred to use only the variable name, not to use nil.</p>
+<pre><code>-- NOT PREFERRED
+if var ~= nil then
+end
+
+-- DO
+if var then
+end
+</code></pre>
+<h4 id="112-ternary-operators-like-assignments">11.2. Ternary operators-like assignments</h4>
+<p>When possible, use ternary operator-like assignment instead of the longer standard structure if-then-else.</p>
+<pre><code>-- DON'T
+if not a then
+a = 3
+
+-- DO
+a = a or 3
+</code></pre>
+<h4 id="113-avoid-more-than-3-levels-of-nesting">11.3. Avoid more than 3 levels of nesting</h4>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="about/" class="btn btn-neutral float-right" title="About the Application">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+      
+        <span style="margin-left: 15px"><a href="about/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme.js" defer></script>
+      <script src="search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.1.2
+Build Date UTC : 2020-06-11 18:49:43.824062+00:00
+-->
