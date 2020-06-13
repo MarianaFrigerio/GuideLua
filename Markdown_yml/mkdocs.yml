@@ -1,0 +1,5 @@
+site_name: GuideLua
+nav:
+    - Home: index.md
+    - About the Application: about.md
+theme: readthedocs
