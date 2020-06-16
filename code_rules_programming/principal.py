@@ -58,6 +58,7 @@ class StyleLua:
                 print("WARNING Line " + str(linea + 1) + ": Indentation is not a multiple of 4")
             count_spaces = 0
 
+    # Check if the TAB character is being used in the source code
     def formatting_tab(self):
         tab = b'\t'
         line_number = 0
@@ -69,15 +70,64 @@ class StyleLua:
                     print("WARNING Line " + str(line_number) + ": Presence of a TAB character. For code indentation,"
                                                                " please use 4 spaces")
 
-    # def formatting_trailing_spaces(self):
+    # Checking if there are trailing spaces
+    def formatting_trailing_spaces(self):
+        end_line = b'\n'
+        line_number = 0
 
+        with open(r"C:\Users\maryf\Desktop\LuaFiles\ex.lua", 'rb') as file_binary:
+            for line in file_binary:
+                line_number += 1
+                index_found = line.find(end_line)
+                if index_found != -1:
+                    for char in range(len(line)):
+                        if line[index_found - 2] == 32 or line[index_found - 2] == 11:  # equals to SPACE or TAB
+                            print("WARNING Line " + str(
+                                line_number) + ": Presence of trailing spaces.")
+                        break
+                else:
+                    for char in range(len(line)):
+                        if line[len(line) - 1] == 32 or line[index_found - 2] == 11: # equals to SPACE or TAB
+                            print("WARNING Line " + str(
+                                line_number) + ": Presence of trailing spaces.")
+                        break
+
+    #Checking if the maximum of lines length is exceeded
     def formatting_max_line_length(self):
         lineas = self.lineasFile
         for linea in range(len(lineas)):
             if(len(lineas[linea])) > 120:
                 print("WARNING Line " + str(linea + 1) + ": line length larger than 120 characters")
 
-    # def naming_local_variable(self):
+    # Notation of local variables: Lower Camel Case
+    def naming_local_variable(self):
+        file_internal = self.saveFile
+        tree = ast.parse(file_internal)
+        aux = ast.to_pretty_str(tree)
+        print(aux)
+        warning = False
+        last_key = ""
+        last_value = ""
+        for node in ast.walk(tree):
+            if isinstance(node, astnodes.LocalAssign):
+                print(node.targets[0].id)
+                if node.targets[0].id.islower() or node.targets[0].id.isupper():
+                    warning = True
+                else:
+                    if node.targets[0].id[0].isupper():
+                        warning = True
+                    if len(node.targets[0].id) > 1:
+                        if node.targets[0].id[0].islower():
+                            warning = True
+                    for char in range(len(node.targets[0].id)):
+                        if node.targets[0].id[0].islower():
+                            warning = True
+                        elif node.targets[0].id[0].islower():
+
+
+                # if isinstance(node.values[0], astnodes.Table):
+                # for field in range(len(node.values[0].fiel
+
     def styleLocalVariableName(self, ast_tree):
         op = "LocalAssign: {}"
         # print(ast_tree)
@@ -372,10 +422,10 @@ def main():
     styleL.formatting_line_break()
     styleL.formatting_indentation()
     styleL.formatting_tab()
-    # styleL.formatting_trailing_spaces()
+    styleL.formatting_trailing_spaces()
     styleL.formatting_max_line_length()
 
-    # styleL.naming_local_variable()
+    styleL.naming_local_variable()
     styleL.styleLocalVariableName(parsed)
     # styleL.naming_global_variable()
     # styleL.naming_local_function()
