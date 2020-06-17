@@ -34,6 +34,7 @@ print("d")
 end
 sayHello()
 lib:sayHi(hey)
+NewJ = 0
 
 local function b()
 end"""

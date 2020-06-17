@@ -103,77 +103,104 @@ class StyleLua:
     def naming_local_variable(self):
         file_internal = self.saveFile
         tree = ast.parse(file_internal)
-        aux = ast.to_pretty_str(tree)
-        print(aux)
+        lineas_file = self.lineasFile
         warning = False
-        last_key = ""
-        last_value = ""
+        search_file = ""
+
         for node in ast.walk(tree):
             if isinstance(node, astnodes.LocalAssign):
-                print(node.targets[0].id)
                 if node.targets[0].id.islower() or node.targets[0].id.isupper():
+                    # if all the letters are uppercase or lowercase
                     warning = True
                 else:
-                    if node.targets[0].id[0].isupper():
+                    if len(node.targets[0].id) == 1 and node.targets[0].id[0].isupper():
+                        # when the only letter is uppercase
                         warning = True
-                    if len(node.targets[0].id) > 1:
-                        if node.targets[0].id[0].islower():
+                    else: # con más de una letra
+                        if node.targets[0].id[0].isupper():
+                            # when the first letter is uppercase
                             warning = True
-                    for char in range(len(node.targets[0].id)):
+                        if len(node.targets[0].id) > 1:
+                            if node.targets[0].id[1].islower():
+                                # when the second letter is lowercase
+                                warning = True
+                        for char in range(len(node.targets[0].id)):
+                            if len(node.targets[0].id) > 2:
+                                if node.targets[0].id[char].isupper():
+                                    if char is not 0:
+                                        if not node.targets[0].id[char - 1].islower():
+                                            # when the previous letter of an uppercase is not a lowercase
+                                            warning = True
+                                    if len(node.targets[0].id) > char + 1:
+                                        if not node.targets[0].id[char + 1].islower():
+                                            # when the next letter of a uppercase is not a lowercase
+                                            warning = True
+                if warning:
+                    search_file = "local " + node.targets[0].id + " "
+                    for linea in range(len(lineas_file)):
+                        matches = re.finditer(search_file, lineas_file[linea])  # viendo en cada linea si existe
+                        matches_positions = [match.start() for match in matches]  # lista de primera posicion de
+                                                                                  # match del char
+                        if matches_positions:
+                            for match in matches_positions:
+                                for char_index in range(len(lineas_file[linea])):
+                                    if char_index == match:
+                                        print("WARNING Line " + str(linea + 1) + ": Name of local variable not "
+                                                                                 "compliant with the coding conventions"
+                                                                                 " - Lower Camel Case")
+                warning = False
+
+    # Notation of local variables: Upper Camel Case
+    def naming_global_variable(self):
+        file_internal = self.saveFile
+        tree = ast.parse(file_internal)
+        lineas_file = self.lineasFile
+        warning = False
+        search_file = ""
+
+        for node in ast.walk(tree):
+            if isinstance(node, astnodes.Assign) and not isinstance(node, astnodes.LocalAssign):
+                if node.targets[0].id.islower() or node.targets[0].id.isupper():
+                    # if all the letters are uppercase or lowercase
+                    warning = True
+                else:
+                    if len(node.targets[0].id) == 1 and node.targets[0].id[0].islower():
+                        # when the only letter is lowercase
+                        warning = True
+                    else:  # con más de una letra
                         if node.targets[0].id[0].islower():
+                            # when the first letter is lowercase
                             warning = True
-                        elif node.targets[0].id[0].islower():
-
-
-                # if isinstance(node.values[0], astnodes.Table):
-                # for field in range(len(node.values[0].fiel
-
-    def styleLocalVariableName(self, ast_tree):
-        op = "LocalAssign: {}"
-        # print(ast_tree)
-        matches_op = re.finditer(op, ast_tree)
-        matches_positions_op = [match.start() for match in
-                                matches_op]  # lista de primera posicion de match del char
-        # print(matches_positions_op)
-
-        splitat = matches_positions_op[0]  # posicion del primer char de donde se encontro lo buscado
-        cutTree = ast_tree[splitat:]  # solo se queda con el tree desde lo encontrado
-
-        id_busqueda = "id: '"
-        matches_id = re.finditer(id_busqueda, cutTree)
-        matches_positions_id = [match.start() for match in matches_id]
-        # print(matches_positions_id)
-
-        # print(re.search(id_busqueda, cutTree).end())
-        splitat = re.search(id_busqueda, cutTree).end()  # posicion del primer char de donde se encontro lo buscado
-        cutTree = cutTree[splitat:]  # solo se queda con el tree desde lo encontrado
-        variableName = ""
-
-        for charId in range(len(cutTree)):
-
-            if cutTree[charId] is "'":
-                break
-            variableName = variableName + cutTree[charId]
-
-        lineas = self.lineasFile
-
-        substring = "local " + variableName + " "
-        for linea in range(len(lineas)):
-            matches = re.finditer(substring, lineas[linea])  # viendo en cada linea si existe el simbolo
-            matches_positions = [match.start() for match in matches]  # lista de primera posicion de match del char
-
-            if matches_positions:
-                for char_index in range(len(lineas[linea])):
-                    if char_index == matches_positions[0]:
-                        if 64 < ord(lineas[linea][char_index + 6]) < 91:
-                            print("WARNING Line " + str(linea + 1) + ": Name of variable not compliant with the "
-                                                                     "coding conventions")
-
-    # TODO: AGREGAR QUE SE PUEDA HACER BUSQUEDA A TODAS LAS VARIABLES (AHORA MISMO SOLO BUSCA SEGUN LA PRIMERA
-    # TODO: VARIABLE ENCONTRADA) AGREGAR BUCLE EN MATCHES_POSITIONS_OP
-    # TODO: HACER COMO EN tables_commas !!
-
-    # def naming_global_variable(self):
+                        if len(node.targets[0].id) > 1:
+                            if node.targets[0].id[1].isupper():
+                                # when the second letter is uppercase
+                                warning = True
+                        for char in range(len(node.targets[0].id)):
+                            if len(node.targets[0].id) > 2:
+                                if node.targets[0].id[char].isupper():
+                                    # print(char)
+                                    if char is not 0:
+                                        if not node.targets[0].id[char - 1].islower():
+                                            # when the previous letter of an uppercase is not a lowercase
+                                            warning = True
+                                    if len(node.targets[0].id) > char + 1:
+                                        if not node.targets[0].id[char + 1].islower():
+                                            # when the next letter of a uppercase is not a lowercase
+                                            warning = True
+                if warning:
+                    search_file = node.targets[0].id + " ="
+                    for linea in range(len(lineas_file)):
+                        matches = re.finditer(search_file, lineas_file[linea])  # viendo en cada linea si existe
+                        matches_positions = [match.start() for match in matches]  # lista de primera posicion de
+                        # match del char
+                        if matches_positions:
+                            for match in matches_positions:
+                                for char_index in range(len(lineas_file[linea])):
+                                    if char_index == match:
+                                        print("WARNING Line " + str(linea + 1) + ": Name of global variable not "
+                                                                                 "compliant with the coding conventions"
+                                                                                 " - Upper Camel Case")
+                warning = False
 
     # def naming_local_function(self):
 
@@ -426,8 +453,7 @@ def main():
     styleL.formatting_max_line_length()
 
     styleL.naming_local_variable()
-    styleL.styleLocalVariableName(parsed)
-    # styleL.naming_global_variable()
+    styleL.naming_global_variable()
     # styleL.naming_local_function()
     # styleL.naming_global_variable()
     # styleL.naming_argument()
