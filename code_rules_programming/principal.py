@@ -92,7 +92,7 @@ class StyleLua:
                                 line_number) + ": Presence of trailing spaces.")
                         break
 
-    #Checking if the maximum of lines length is exceeded
+    # Checking if the maximum of lines length is exceeded
     def formatting_max_line_length(self):
         lineas = self.lineasFile
         for linea in range(len(lineas)):
@@ -202,11 +202,207 @@ class StyleLua:
                                                                                  " - Upper Camel Case")
                 warning = False
 
-    # def naming_local_function(self):
+    # Notation of local functions: _lowerCamelCase
+    def naming_local_function(self):
+        file_internal = self.saveFile
+        tree = ast.parse(file_internal)
+        lineas_file = self.lineasFile
+        warning = False
+        search_file = ""
 
-    # def naming_global_variable(self):
+        for node in ast.walk(tree):
+            if isinstance(node, astnodes.LocalFunction):
+                if node.name.id.islower() or node.name.id.isupper():
+                    # if all the letters are uppercase or lowercase
+                    warning = True
+                else:
+                    if len(node.name.id) == 1:
+                        warning = True
+                    if len(node.name.id) == 2 and (node.name.id[0] is not "_" or node.name.id[1].isupper):
+                        # when there are only two letters
+                        warning = True
+                    else:  # con más de una letra
+                        if node.name.id[0] is not "_":
+                            # when the first letter is not an underscore
+                            warning = True
+                        if node.name.id[1].isupper():
+                            # when the first letter is uppercase
+                            warning = True
+                        if len(node.name.id) > 2:
+                            if not node.name.id[2].islower():
+                                # when the second letter is lowercase
+                                warning = True
+                        for char in range(len(node.name.id)):
+                            if len(node.name.id) > 2:
+                                if node.name.id[char].isupper():
+                                    if char is not 0 or char is not 1:
+                                        if not node.name.id[char - 1].islower():
+                                            # when the previous letter of an uppercase is not a lowercase
+                                            warning = True
+                                    if len(node.name.id) > char + 1:
+                                        if not node.name.id[char + 1].islower():
+                                            # when the next letter of a uppercase is not a lowercase
+                                            warning = True
+                if warning:
+                    search_file = "local function " + node.name.id + "\("
+                    for linea in range(len(lineas_file)):
+                        matches = re.finditer(search_file, lineas_file[linea])  # viendo en cada linea si existe
+                        matches_positions = [match.start() for match in matches]  # lista de primera posicion de
+                        # match del char
+                        if matches_positions:
+                            for match in matches_positions:
+                                for char_index in range(len(lineas_file[linea])):
+                                    if char_index == match:
+                                        print("WARNING Line " + str(linea + 1) + ": Name of local function not "
+                                                                                 "compliant with the coding conventions"
+                                                                                 " - _lowerCamelCase")
+                warning = False
 
-    # def naming_argument(self):
+    # Notation of local functions: Upper Camel Case
+    def naming_global_function(self):
+        file_internal = self.saveFile
+        tree = ast.parse(file_internal)
+        lineas_file = self.lineasFile
+        warning = False
+        search_file = ""
+
+        for node in ast.walk(tree):
+            if isinstance(node, astnodes.Function) and not isinstance(node, astnodes.LocalFunction):
+                if node.name.id.islower() or node.name.id.isupper():
+                    # if all the letters are uppercase or lowercase
+                    warning = True
+                else:
+                    if len(node.name.id) == 1 and node.name.id[0].islower():
+                        # when the only letter is lowercase
+                        warning = True
+                    else:  # con más de una letra
+                        if node.name.id[0].islower():
+                            # when the first letter is lowercase
+                            warning = True
+                        if len(node.name.id) > 1:
+                            if node.name.id[1].isupper():
+                                # when the second letter is uppercase
+                                warning = True
+                        for char in range(len(node.name.id)):
+                            if len(node.name.id) > 2:
+                                if node.name.id[char].isupper():
+                                    # print(char)
+                                    if char is not 0:
+                                        if not node.name.id[char - 1].islower():
+                                            # when the previous letter of an uppercase is not a lowercase
+                                            warning = True
+                                    if len(node.name.id) > char + 1:
+                                        if not node.name.id[char + 1].islower():
+                                            # when the next letter of a uppercase is not a lowercase
+                                            warning = True
+                if warning:
+                    search_file = "function " + node.name.id + "\("
+                    for linea in range(len(lineas_file)):
+                        matches = re.finditer(search_file, lineas_file[linea])  # viendo en cada linea si existe
+                        matches_positions = [match.start() for match in matches]  # lista de primera posicion de
+                        # match del char
+                        if matches_positions:
+                            for match in matches_positions:
+                                for char_index in range(len(lineas_file[linea])):
+                                    if char_index == match:
+                                        print("WARNING Line " + str(linea + 1) + ": Name of global function not "
+                                                                                 "compliant with the coding conventions"
+                                                                                 " - Upper Camel Case")
+                warning = False
+
+        aux = ast.to_pretty_str(tree)
+        # print(aux)
+
+    # Notation of arguments of functions: Lower Camel Case
+    def naming_argument(self):
+        file_internal = self.saveFile
+        tree = ast.parse(file_internal)
+        lineas_file = self.lineasFile
+        warning = False
+        search_function = ""
+        search_arg1 = ""
+        search_arg2 = ""
+
+        for node in ast.walk(tree):
+            if isinstance(node, astnodes.LocalFunction):
+                # print(len(node.args))
+                if node.args:
+                    # print(len(node.args))
+                    for arg in range(len(node.args)):
+                        # print(arg)
+                        # print(node.args[arg].id)
+                        # print(node.name.id)
+
+                        if node.args[arg].id.islower() or node.args[arg].id.isupper():
+                            # if all the letters are uppercase or lowercase
+                            warning = True
+                        else:
+                            if len(node.args[arg].id) == 1 and node.node.args[arg].id.isupper():
+                                # when the only letter is uppercase
+                                warning = True
+                            else:  # con más de una letra
+                                if node.args[arg].id.isupper():
+                                    # when the first letter is uppercase
+                                    warning = True
+                                if len(node.args[arg].id) > 1:
+                                    if node.args[arg].id.islower():
+                                        # when the second letter is lowercase
+                                        warning = True
+                                for char in range(len(node.args[arg].id)):
+                                    if len(node.args[arg].id) > 2:
+                                        if node.args[arg].id[char].isupper():
+                                            if char is not 0:
+                                                if not node.args[arg].id[char - 1].islower():
+                                                    # when the previous letter of an uppercase is not a lowercase
+                                                    warning = True
+                                            if len(node.args[arg].id) > char + 1:
+                                                if not node.args[arg].id[char + 1].islower():
+                                                    # when the next letter of a uppercase is not a lowercase
+                                                    warning = True
+                        if warning:
+                            search_function = "function " + node.name.id + "\("
+                            print(node.name.id)
+                            print(node.args[arg].id)
+                            search_arg1 = node.args[arg].id + ","
+                            search_arg2 = node.args[arg].id + "\)"
+                            for linea in range(len(lineas_file)):
+                                matches_funct = re.finditer(search_function, lineas_file[linea])  # viendo en
+                                # cada linea si existe
+                                matches_positions_funct = [match.start() for match in matches_funct]
+                                # lista de primera posicion de match del char
+
+                                matches_arg1 = re.finditer(search_arg1, lineas_file[linea])  # viendo en
+                                # cada linea si existe
+                                matches_positions_arg1 = [match.start() for match in matches_arg1]
+                                # lista de primera posicion de match del char
+
+                                matches_arg2 = re.finditer(search_arg2, lineas_file[linea])  # viendo en
+                                # cada linea si existe
+                                matches_positions_arg2 = [match.start() for match in matches_arg2]
+                                # lista de primera posicion de match del char
+
+                                # print(matches_positions_arg)
+                                # print(matches_positions_funct)
+                                if matches_positions_funct and (matches_positions_arg1 or matches_positions_arg2):
+                                    # print("entré")
+                                    for match in matches_positions_arg1:
+                                        for char_index in range(len(lineas_file[linea])):
+                                            if char_index == match:
+                                                print("WARNING Line " + str(linea + 1) + ": Name of argument '" +
+                                                                                        node.args[arg].id + "' not "
+                                                                                         "compliant with the coding "
+                                                                                         "conventions"
+                                                                                         " - Lower Camel Case")
+
+                                    for match in matches_positions_arg2:
+                                        for char_index in range(len(lineas_file[linea])):
+                                            if char_index == match:
+                                                print("WARNING Line " + str(linea + 1) + ": Name of argument '" +
+                                                                                        node.args[arg].id + "' not "
+                                                                                         "compliant with the coding "
+                                                                                         "conventions"
+                                                                                         " - Lower Camel Case")
+                        warning = False
 
     # def naming_library(self):
 
@@ -454,9 +650,9 @@ def main():
 
     styleL.naming_local_variable()
     styleL.naming_global_variable()
-    # styleL.naming_local_function()
-    # styleL.naming_global_variable()
-    # styleL.naming_argument()
+    styleL.naming_local_function()
+    styleL.naming_global_function()
+    styleL.naming_argument()
     # styleL.naming_library()
     # styleL.naming_libraries_calls()
     # styleL.naming_unneeded_variables()
@@ -464,7 +660,7 @@ def main():
     styleL.naming_bad_characters()
 
     # styleL.layout_operators(parsed)
-    # styleL.layout_operators_IfEquals(parsed)
+    styleL.layout_operators_IfEquals(parsed)
     # styleL.layout_spaces_next_brackets()
     # styleL.layout_space_alignment()
     # styleL.layout_empty_line_between_functions()
