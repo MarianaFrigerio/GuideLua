@@ -361,8 +361,8 @@ class StyleLua:
                                                     warning = True
                         if warning:
                             search_function = "function " + node.name.id + "\("
-                            print(node.name.id)
-                            print(node.args[arg].id)
+                            # print(node.name.id)
+                            # print(node.args[arg].id)
                             search_arg1 = node.args[arg].id + ","
                             search_arg2 = node.args[arg].id + "\)"
                             for linea in range(len(lineas_file)):
@@ -536,6 +536,7 @@ class StyleLua:
 
     # def functions_call_self(self):
 
+    # Check if the 20 lines max function size is exceeded
     def functions_funct_size(self):
         count_warns = 0
         file_internal = self.saveFile
@@ -575,7 +576,29 @@ class StyleLua:
             char_count = 0
             warning = False
 
-    # def functions_total_arguments(self):
+    # Check if the total arguments of a function is exceeded
+    def functions_total_arguments(self):
+        count_warns = 0
+        file_internal = self.saveFile
+        tree = ast.parse(file_internal)
+        char_start_funct = 0
+        local_funct_name = ""
+        total_args = 0
+        total_chars_lineas = 0
+
+        for node in ast.walk(tree):
+            if isinstance(node, astnodes.LocalFunction) or isinstance(node, astnodes.Function):
+                total_args = len(node.args)
+                local_funct_name = node.name.id
+                if total_args > 4:
+                    char_start_funct = node.start_char
+                    for linea in range(len(self.lineasFile)):
+                        total_chars_lineas += len(self.lineasFile[linea])
+                        if total_chars_lineas >= char_start_funct:
+                            print("WARNING Line " + str(linea + 1) + ": Function named " + local_funct_name +
+                                  " exceeds the  maximum of 4 arguments per function")
+                            total_chars_lineas = 0
+                            break
 
     # def functions_one_line_functions(self):
 
@@ -684,7 +707,7 @@ def main():
     # styleL.functions_calls_not_self()
     # styleL.functions_call_self()
     styleL.functions_funct_size()
-    # styleL.functions_total_arguments()
+    styleL.functions_total_arguments()
     # styleL.functions_one_line_functions()
     # styleL.functions_return()
     # styleL.functions_arguments_indentation()
