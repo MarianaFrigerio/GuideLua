@@ -637,7 +637,42 @@ class StyleLua:
             char_count = 0
             warning = False
 
-    # def functions_return(self):
+    # Check if there is only a point of return of a function
+    def functions_return(self):
+        file_internal = self.saveFile
+        tree = ast.parse(file_internal)
+        num_returns = 0
+        char_start_locF = 0
+        char_count = 0
+        local_funct_name = ""
+        linea_beginning = 0
+        warning = False
+
+        for node in ast.walk(tree):
+            if isinstance(node, astnodes.LocalFunction) or isinstance(node, astnodes.Function):
+                local_funct_name = node.name.id
+                char_start_locF = node.start_char
+                for node_internal in ast.walk(node):
+                    if isinstance(node_internal, astnodes.Return):
+                        num_returns += 1
+                if num_returns > 1:
+                    for linea in range(len(self.lineasFile)):
+                        for char_index in range(len(self.lineasFile[linea])):
+                            if char_count == char_start_locF:
+                                linea_beginning = linea + 1
+                                warning = True
+                                break
+                            char_count += 1
+                        char_count += 1  # agregando el caracter de newline (\n)
+                        if warning:
+                            print("WARNING Line " + str(
+                                linea_beginning) + ": Function named '" + local_funct_name +
+                                  "' has more than one point of return. If this is because an early-return, ignore"
+                                  " this warning.")
+                            break
+                    char_count = 0
+                    warning = False
+                num_returns = 0
 
     # def functions_arguments_indentation(self):
 
@@ -744,7 +779,7 @@ def main():
     styleL.functions_funct_size()
     styleL.functions_total_arguments()
     styleL.functions_one_line_functions()
-    # styleL.functions_return()
+    styleL.functions_return()
     # styleL.functions_arguments_indentation()
 
     # styleL.tables_broke_tables_assignments_if_many()
