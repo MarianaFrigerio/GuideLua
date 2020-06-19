@@ -600,7 +600,42 @@ class StyleLua:
                             total_chars_lineas = 0
                             break
 
-    # def functions_one_line_functions(self):
+    # Check if the functions are one line long, as they should have more lines
+    def functions_one_line_functions(self):
+        file_internal = self.saveFile
+        tree = ast.parse(file_internal)
+        aux = ast.to_pretty_str(tree)
+        char_start_locF = 0
+        char_end_locF = 0
+        char_count = 0
+        local_funct_name = ""
+        linea_beggining = 0
+        linea_end = 0
+        total_lines = 0
+        warning = False
+        for node in ast.walk(tree):
+            if isinstance(node, astnodes.LocalFunction) or isinstance(node, astnodes.Function):
+                char_start_locF = node.start_char
+                char_end_locF = node.stop_char
+                local_funct_name = node.name.id
+                for linea in range(len(self.lineasFile)):
+                    for char_index in range(len(self.lineasFile[linea])):
+                        if char_count == char_start_locF:
+                            linea_beggining = linea + 1
+                        if char_count == char_end_locF:
+                            warning = True
+                            linea_end = linea + 1
+                            break
+                        char_count += 1
+                    char_count += 1  # agregando el caracter de newline (\n)
+                    if warning:
+                        total_lines = linea_end - linea_beggining
+                        if total_lines == 0:
+                            print("WARNING Line " + str(linea_beggining) + ": Function named '" + local_funct_name +
+                                  "' is a one-line function. This should be avoided")
+                        break
+            char_count = 0
+            warning = False
 
     # def functions_return(self):
 
@@ -708,7 +743,7 @@ def main():
     # styleL.functions_call_self()
     styleL.functions_funct_size()
     styleL.functions_total_arguments()
-    # styleL.functions_one_line_functions()
+    styleL.functions_one_line_functions()
     # styleL.functions_return()
     # styleL.functions_arguments_indentation()
 
