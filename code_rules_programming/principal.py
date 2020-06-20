@@ -486,7 +486,56 @@ class StyleLua:
 
     # def layout_space_alignment(self):
 
-    # def layout_empty_line_between_functions(self):
+    # Check if there is an empty line between functions
+    def layout_empty_line_between_functions(self):
+        file_internal = self.saveFile
+        tree = ast.parse(file_internal)
+        aux = ast.to_pretty_str(tree)
+        # print(aux)
+        char_start_locF = 0
+        char_end_locF = 0
+        char_start_other = 0
+        char_end_other = 0
+        char_count = 0
+        local_funct_name = ""
+        funct2_name = ""
+        linea_beggining = 0
+        linea_end = 0
+        warning = False
+        for node in ast.walk(tree):
+            if isinstance(node, astnodes.LocalFunction) or isinstance(node, astnodes.Function):
+                char_start_locF = node.start_char
+                char_end_locF = node.stop_char
+                local_funct_name = node.name.id
+                for other_node in ast.walk(tree):
+                    if isinstance(other_node, astnodes.LocalFunction) or isinstance(other_node, astnodes.Function):
+                        if other_node.name.id is not local_funct_name and other_node.stop_char is not char_end_locF and\
+                                 other_node.start_char is not char_start_locF:
+                            char_start_other = other_node.start_char
+                            char_end_other = other_node.stop_char
+                            funct2_name = other_node.name.id
+                            if char_start_locF < char_start_other and char_end_locF < char_end_other:
+                                for linea in range(len(self.lineasFile)):
+                                    for char_index in range(len(self.lineasFile[linea])):
+
+                                        if char_count == char_end_locF:
+                                            linea_beggining = linea + 1
+                                        if char_count == char_start_other:
+                                            warning = True
+                                            linea_end = linea + 1
+                                            break
+                                        char_count += 1
+                                    char_count += 1  # agregando el caracter de newline (\n)
+                                    if warning:
+                                        total_lines = linea_end - linea_beggining
+                                        if total_lines < 2:
+                                            print("WARNING Line " + str(linea_end) + ": It does not exist at least one "
+                                                                                     "separation line"
+                                                                                     " between functions '"
+                                                  + local_funct_name + "' and '" + funct2_name + "'")
+                                        break
+                    char_count = 0
+                    warning = False
 
     # def layout_max_successive_empty_lines(self):
 
@@ -725,7 +774,6 @@ class StyleLua:
         for node in ast.walk(tree):
             if isinstance(node, astnodes.LocalAssign):
                 if isinstance(node.values[0], astnodes.Table):
-                    print(node.targets[0].id)
                     for field in range(len(node.values[0].fields)):
                         if field == len(node.values[0].fields) - 1:
                             last_value = node.values[0].fields[field].value.id
@@ -928,7 +976,7 @@ def main():
     styleL.layout_operators_IfEquals(parsed)
     styleL.layout_spaces_next_brackets()
     # styleL.layout_space_alignment()
-    # styleL.layout_empty_line_between_functions()
+    styleL.layout_empty_line_between_functions()
     # styleL.layout_max_successive_empty_lines()
 
     styleL.comments_english()
