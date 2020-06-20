@@ -452,7 +452,37 @@ class StyleLua:
                                 if count_warns is not 1:
                                     print("WARNING Line " + str(linea + 1) + ": missing spaces around operator")
 
-    # def layout_spaces_next_brackets(self):
+    # Check that there are no spaces after the ([ characters and before the )] characters
+    def layout_spaces_next_brackets(self):
+        file_internal = self.saveFile
+        tree = ast.parse(file_internal)
+        aux = ast.to_pretty_str(tree)
+        # print(aux)
+        warning = False
+
+        for linea in range(len(self.lineasFile)):
+            for char_index in range(len(self.lineasFile[linea])):
+                # beginning brackets ([
+                if len(self.lineasFile[linea]) > 1:
+                    if char_index == 0:
+                        if self.lineasFile[linea][char_index] == "(" or self.lineasFile[linea][char_index] == "[":
+                            if self.lineasFile[linea][char_index + 1] is " ":
+                                print("WARNING Line " + str(linea + 1) + ": Space not permitted after the ([ "
+                                                                         "characters")
+                    elif char_index == len(self.lineasFile[linea][char_index]) - 1:
+                        if self.lineasFile[linea][char_index] == ")" or self.lineasFile[linea][char_index] == "]":
+                            if self.lineasFile[linea][char_index - 1] is " ":
+                                print("WARNING Line " + str(linea + 1) + ": Space not permitted before the )] "
+                                                                         "characters")
+                    else:
+                        if self.lineasFile[linea][char_index] == "(" or self.lineasFile[linea][char_index] == "[":
+                            if self.lineasFile[linea][char_index + 1] is " ":
+                                print("WARNING Line " + str(linea + 1) + ": Space not permitted after the ([ "
+                                                                         "characters")
+                        if self.lineasFile[linea][char_index] == ")" or self.lineasFile[linea][char_index] == "]":
+                            if self.lineasFile[linea][char_index - 1] is " ":
+                                print("WARNING Line " + str(linea + 1) + ": Space not permitted before the )] "
+                                                                         "characters")
 
     # def layout_space_alignment(self):
 
@@ -896,7 +926,7 @@ def main():
 
     # styleL.layout_operators(parsed)
     styleL.layout_operators_IfEquals(parsed)
-    # styleL.layout_spaces_next_brackets()
+    styleL.layout_spaces_next_brackets()
     # styleL.layout_space_alignment()
     # styleL.layout_empty_line_between_functions()
     # styleL.layout_max_successive_empty_lines()
