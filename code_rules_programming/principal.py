@@ -616,7 +616,19 @@ class StyleLua:
             words_save = ""
             count_warns = 0
 
-    # def comments_space_btw_comment_mark_text(self):
+    # Check if after the comment mark it exists a space separating the comment mark and the comment
+    def comments_space_btw_comment_mark_text(self):
+        warning = False
+        count_empty = 0
+        char_linea_empty = 0
+        comment_mark = "--"
+
+        for linea in range(len(self.lineasFile)):
+            index_found = self.lineasFile[linea].find(comment_mark)
+            if index_found != -1 and len(self.lineasFile[linea]) > 2:
+                if self.lineasFile[linea][index_found + 2] is not " ":
+                    print("WARNING Line " + str(
+                        linea + 1) + ": missing space after a comment mark")
 
     # def comments_luadoc_docstrings(self):
 
@@ -1005,7 +1017,7 @@ def main():
     styleL.layout_max_successive_empty_lines()
 
     styleL.comments_english()
-    # styleL.comments_space_btw_comment_mark_text()
+    styleL.comments_space_btw_comment_mark_text()
     # styleL.comments_luadoc_docstrings()
     # styleL.comments_commented_code()
 
