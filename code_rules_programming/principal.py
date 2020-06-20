@@ -537,7 +537,32 @@ class StyleLua:
                     char_count = 0
                     warning = False
 
-    # def layout_max_successive_empty_lines(self):
+    # Check if there are more than two successive empty lines
+    def layout_max_successive_empty_lines(self):
+        warning = False
+        count_empty = 0
+        char_linea_empty = 0
+
+        for linea in range(len(self.lineasFile)):
+            if not len(self.lineasFile[linea]):
+                warning = True
+                count_empty += 1
+            else:
+                for char_index in range(len(self.lineasFile[linea])):
+                    # if space or TAB characters
+                    if self.lineasFile[linea][char_index] == " " or ord(self.lineasFile[linea][char_index]) == 9:
+                        char_linea_empty += 1
+                if char_linea_empty == len(self.lineasFile[linea]):
+                    count_empty += 1
+                else:
+                    warning = False
+
+            char_linea_empty = 0
+            if not warning and count_empty > 2:
+                print("WARNING Line " + str(linea) + ": Maximum of successive empty lines (2) exceeded")
+                count_empty = 0
+            if not warning and count_empty < 3:
+                count_empty = 0
 
     def comments_english(self):
         lineas = self.lineasFile
@@ -977,7 +1002,7 @@ def main():
     styleL.layout_spaces_next_brackets()
     # styleL.layout_space_alignment()
     styleL.layout_empty_line_between_functions()
-    # styleL.layout_max_successive_empty_lines()
+    styleL.layout_max_successive_empty_lines()
 
     styleL.comments_english()
     # styleL.comments_space_btw_comment_mark_text()
