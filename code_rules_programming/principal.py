@@ -680,39 +680,181 @@ class StyleLua:
 
     # def tables_keys_alignments_when_multiple_lines(self):
 
+    # Check if the last value is followed by a comma
     def tables_commas(self):
         file_internal = self.saveFile
         tree = ast.parse(file_internal)
-        aux = ast.to_pretty_str(tree)
         last_key = ""
         last_value = ""
+        id_busqueda_brackets = ""
+        id_busqueda_no_brackets = ""
+        match_no_brackets_index = -1
+        match_no_brackets_index = -1
+
+        # FOR loop for LocalAssign
         for node in ast.walk(tree):
             if isinstance(node, astnodes.LocalAssign):
                 if isinstance(node.values[0], astnodes.Table):
+                    print(node.targets[0].id)
                     for field in range(len(node.values[0].fields)):
                         if field == len(node.values[0].fields) - 1:
-                            last_key = node.values[0].fields[field].key.id
                             last_value = node.values[0].fields[field].value.id
 
-                    id_busqueda = last_key + " = " + last_value
+                            if node.values[0].fields[field].between_brackets:
+                                last_key = node.values[0].fields[field].key.s
+                                id_busqueda_brackets = '["' + last_key + '"] = ' + last_value
+
+                            else:
+                                last_key = node.values[0].fields[field].key.id
+                                id_busqueda_no_brackets = last_key + " = " + last_value
+
                     for linea in range(len(self.lineasFile)):
-                        matches_id = re.finditer(id_busqueda, self.lineasFile[linea])
-                        matches_positions_id = [match.start() for match in matches_id]
-                        for char_index in range(len(self.lineasFile[linea])):
-                            if matches_positions_id:
-                                for match_pos in range(len(matches_positions_id)):
-                                    if char_index == matches_positions_id[match_pos]:
-                                        if (char_index + len(id_busqueda)) >= len(self.lineasFile[linea]):
-                                            print("WARNING Line " + str(
-                                                linea + 1) + ": A comma after the last item of table assignation is not"
-                                                             " used.")
-                                        elif self.lineasFile[linea][char_index + len(id_busqueda)] is not ",":
-                                            print("WARNING Line " + str(
-                                                linea + 1) + ": A comma after the last item of table assignation is not"
-                                                             " used.")
+                        if id_busqueda_brackets:
+                            if id_busqueda_brackets in self.lineasFile[linea]:
+                                try:
+                                    match_brackets_index = self.lineasFile[linea].index(id_busqueda_brackets)
+                                except ValueError:
+                                    match_brackets_index = -1
+                                if match_brackets_index > - 1:
+                                    for char_index in range(len(self.lineasFile[linea])):
+                                        if char_index == match_brackets_index:
+                                            if (char_index + len(id_busqueda_brackets)) >= len(self.lineasFile[linea]):
+                                                print("WARNING Line " + str(
+                                                    linea + 1) + ": A comma after the last item of table assignation is"
+                                                                 " not"
+                                                                 " used.")
+                                            elif self.lineasFile[linea][char_index + len(id_busqueda_brackets)] is not \
+                                                    ",":
+                                                print("WARNING Line " + str(
+                                                    linea + 1) + ": A comma after the last item of table assignation is"
+                                                                 " not"
+                                                                 " used.")
 
-    # def tables_dictionary_constructors(self):
+                        if id_busqueda_no_brackets:
+                            if id_busqueda_no_brackets in self.lineasFile[linea]:
+                                try:
+                                    match_no_brackets_index = self.lineasFile[linea].index(id_busqueda_no_brackets)
+                                except ValueError:
+                                    match_no_brackets_index = -1
+                                if match_no_brackets_index > -1:
+                                    for char_index in range(len(self.lineasFile[linea])):
+                                        if char_index == match_no_brackets_index:
+                                            if (char_index + len(id_busqueda_no_brackets)) >= len(
+                                                    self.lineasFile[linea]):
+                                                print("WARNING Line " + str(
+                                                    linea + 1) + ": A comma after the last item of table assignation is"
+                                                                 " not used.")
+                                            elif self.lineasFile[linea][char_index + len(id_busqueda_no_brackets)] \
+                                                    is not ",":
+                                                print("WARNING Line " + str(
+                                                    linea + 1) + ": A comma after the last item of table assignation"
+                                                                 " is not used.")
 
+                    last_key = ""
+                    last_value = ""
+                    id_busqueda_brackets = ''
+                    id_busqueda_no_brackets = ''
+                    match_no_brackets_index = -1
+                    match_no_brackets_index = -1
+
+        # FOR loop for only Assign
+        for node in ast.walk(tree):
+            if isinstance(node, astnodes.Assign) and not isinstance(node, astnodes.LocalAssign):
+                if isinstance(node.values[0], astnodes.Table):
+                    for field in range(len(node.values[0].fields)):
+                        if field == len(node.values[0].fields) - 1:
+                            last_value = node.values[0].fields[field].value.id
+
+                            if node.values[0].fields[field].between_brackets:
+                                last_key = node.values[0].fields[field].key.s
+                                id_busqueda_brackets = '["' + last_key + '"] = ' + last_value
+
+                            else:
+                                last_key = node.values[0].fields[field].key.id
+                                id_busqueda_no_brackets = last_key + " = " + last_value
+
+                    for linea in range(len(self.lineasFile)):
+                        if id_busqueda_brackets:
+                            if id_busqueda_brackets in self.lineasFile[linea]:
+                                try:
+                                    match_brackets_index = self.lineasFile[linea].index(id_busqueda_brackets)
+                                except ValueError:
+                                    match_brackets_index = -1
+                                if match_brackets_index > - 1:
+                                    for char_index in range(len(self.lineasFile[linea])):
+                                        if char_index == match_brackets_index:
+                                            if (char_index + len(id_busqueda_brackets)) >= len(self.lineasFile[linea]):
+                                                print("WARNING Line " + str(
+                                                    linea + 1) + ": A comma after the last item of table assignation is"
+                                                                 " not"
+                                                                 " used.")
+                                            elif self.lineasFile[linea][char_index + len(id_busqueda_brackets)] is not\
+                                                    ",":
+                                                print("WARNING Line " + str(
+                                                    linea + 1) + ": A comma after the last item of table assignation is"
+                                                                 " not"
+                                                                 " used.")
+                                        
+                        if id_busqueda_no_brackets:
+                            if id_busqueda_brackets in self.lineasFile[linea]:
+                                try:
+                                    match_no_brackets_index = self.lineasFile[linea].index(id_busqueda_no_brackets)
+                                except ValueError:
+                                    match_no_brackets_index = -1
+                                if match_no_brackets_index > -1:
+                                    for char_index in range(len(self.lineasFile[linea])):
+                                        if char_index == match_no_brackets_index:
+                                            if (char_index + len(id_busqueda_no_brackets)) >= len(self.lineasFile[linea]
+                                                                                                  ):
+                                                print("WARNING Line " + str(
+                                                    linea + 1) + ": A comma after the last item of table assignation is"
+                                                                 " not used.")
+                                            elif self.lineasFile[linea][char_index + len(id_busqueda_no_brackets)] \
+                                                    is not ",":
+                                                print("WARNING Line " + str(
+                                                    linea + 1) + ": A comma after the last item of table assignation"
+                                                                 " is not used.")
+
+                    last_key = ""
+                    last_value = ""
+                    id_busqueda_brackets = ''
+                    id_busqueda_no_brackets = ''
+                    match_no_brackets_index = -1
+                    match_no_brackets_index = -1
+
+    # Check if the declaration of a table/dictionary is made without brackets
+    def tables_dictionary_constructors(self):
+        file_internal = self.saveFile
+        tree = ast.parse(file_internal)
+        aux = ast.to_pretty_str(tree)
+        # print(aux)
+        count_brackets = 0
+        id_busqueda = ""
+
+        for node in ast.walk(tree):
+            if isinstance(node, astnodes.LocalAssign) or isinstance(node, astnodes.Assign):
+                if isinstance(node.values[0], astnodes.Table):
+                    for field in range(len(node.values[0].fields)):
+                        if node.values[0].fields[field].between_brackets:
+                            count_brackets += 1
+                    if count_brackets > 0:
+                        if isinstance(node, astnodes.LocalAssign):
+                            id_busqueda = "local " + node.targets[0].id + " = {"
+                        elif isinstance(node, astnodes.Assign):
+                            id_busqueda = node.targets[0].id + " = {"
+                        for linea in range(len(self.lineasFile)):
+                            matches_id = re.finditer(id_busqueda, self.lineasFile[linea])
+                            matches_positions_id = [match.start() for match in matches_id]
+                            for char_index in range(len(self.lineasFile[linea])):
+                                if matches_positions_id:
+                                    for match_pos in range(len(matches_positions_id)):
+                                        if char_index == matches_positions_id[match_pos]:
+                                            print("WARNING Line " + str(
+                                                linea + 1) + ": Function named '" + node.targets[0].id +
+                                                  "' uses brackets for its keys in at least a key assignment")
+                    count_brackets = 0
+
+    # Check the usage of nil (not recommended)
     def other_nil(self):
         substring = "nil"
         for linea in range(len(self.lineasFile)):
@@ -785,7 +927,7 @@ def main():
     # styleL.tables_broke_tables_assignments_if_many()
     # styleL.tables_keys_alignments_when_multiple_lines()
     styleL.tables_commas()
-    # styleL.tables_dictionary_constructors()
+    styleL.tables_dictionary_constructors()
 
     styleL.other_nil()
     # styleL.other_ternary()
