@@ -618,9 +618,6 @@ class StyleLua:
 
     # Check if after the comment mark it exists a space separating the comment mark and the comment
     def comments_space_btw_comment_mark_text(self):
-        warning = False
-        count_empty = 0
-        char_linea_empty = 0
         comment_mark = "--"
 
         for linea in range(len(self.lineasFile)):
@@ -634,11 +631,47 @@ class StyleLua:
 
     # def comments_commented_code(self):
 
-    # def keywords_todo(self):
+    # Check if there is a todo keyword used on a comment
+    def keywords_todo(self):
+        keyword_todo = "-- todo: "
+        string_print = ""
 
-    # def keywords_bug(self):
+        for linea in range(len(self.lineasFile)):
+            index_found = self.lineasFile[linea].find(keyword_todo)
+            if index_found != -1 and len(self.lineasFile[linea]) > 9:
+                for index in range(len(self.lineasFile[linea])):
+                    if index >= index_found + 3:
+                        string_print = string_print + self.lineasFile[linea][index]
+                print("ANNOTATION Line " + str(linea + 1) + ": " + string_print)
+            string_print = ""
 
-    # def keywords_note(self):
+    # Check if there is a bug keyword used on a comment
+    def keywords_bug(self):
+        keyword_todo = "-- bug: "
+        string_print = ""
+
+        for linea in range(len(self.lineasFile)):
+            index_found = self.lineasFile[linea].find(keyword_todo)
+            if index_found != -1 and len(self.lineasFile[linea]) > 9:
+                for index in range(len(self.lineasFile[linea])):
+                    if index >= index_found + 3:
+                        string_print = string_print + self.lineasFile[linea][index]
+                print("ANNOTATION Line " + str(linea + 1) + ": " + string_print)
+            string_print = ""
+
+    # Check if there is a note keyword used on a comment
+    def keywords_note(self):
+        keyword_todo = "-- note: "
+        string_print = ""
+
+        for linea in range(len(self.lineasFile)):
+            index_found = self.lineasFile[linea].find(keyword_todo)
+            if index_found != -1 and len(self.lineasFile[linea]) > 9:
+                for index in range(len(self.lineasFile[linea])):
+                    if index >= index_found + 3:
+                        string_print = string_print + self.lineasFile[linea][index]
+                print("ANNOTATION Line " + str(linea + 1) + ": " + string_print)
+            string_print = ""
 
     # def scopes_preferred_scope(self):
 
@@ -1021,9 +1054,9 @@ def main():
     # styleL.comments_luadoc_docstrings()
     # styleL.comments_commented_code()
 
-    # styleL.keywords_todo()
-    # styleL.keywords_bug()
-    # styleL.keywords_note()
+    styleL.keywords_todo()
+    styleL.keywords_bug()
+    styleL.keywords_note()
 
     # styleL.scopes_preferred_scope()
     # styleL.scopes_modules_not_global()
