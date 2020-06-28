@@ -249,14 +249,14 @@ In cases where the intrinsic `self` parameter is not used, we need to do a class
         return inmation.gettime(posix):sub(1,19)
     end
 
-#### 8.1. Functions calls if `self` is not used in the function
+#### 8.1. Functions declaration if `self` is not used in the function
 
     -- if self is NOT USED in the function
     function lib.selfNotUsed(_,arg1)
         return "function received arg : " .. arg1
     end
 
-#### 8.2. Functions calls if `self` is used in the function
+#### 8.2. Functions declaration if `self` is used in the function
 
     -- if self is USED in the function 
     function lib:selfUsed(arg1)
